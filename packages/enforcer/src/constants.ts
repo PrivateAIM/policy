@@ -5,4 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export * from './config';
+import path from 'node:path';
+import process from 'node:process';
+
+export const WRITABLE_DIRECTORY = path.join(process.cwd(), 'writable');

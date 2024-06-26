@@ -6,11 +6,14 @@
  */
 
 import type { CAC } from 'cac';
+import { configure } from '../../config';
 
 export function mountCLIStartCommand(cli: CAC) {
     cli
         .command('start')
         .action(async () => {
+            configure();
+
             console.log('Hello, world!');
         });
 }

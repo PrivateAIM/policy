@@ -22,7 +22,7 @@ Made with 💚
 
 Published under [MIT License](./LICENSE).
 
-[workflow-src]: https://github.com/PrivateAim/policy/workflows/CI/badge.svg
+[workflow-src]: https://github.com/PrivateAIM/policy/actions/workflows/main.yml/badge.svg
 [workflow-href]: https://github.com/PrivateAim/policy
 [snyk-src]: https://snyk.io/test/github/PrivateAim/policy/badge.svg?targetFile=package.json
 [snyk-href]: https://snyk.io/test/github/PrivateAim/policy?targetFile=package.json
