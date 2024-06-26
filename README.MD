@@ -1,6 +1,5 @@
 # Policy 🛡️
 
-[![npm version][codecov-src]][codecov-href]
 [![Master Workflow][workflow-src]][workflow-href]
 [![Known Vulnerabilities][snyk-src]][snyk-href]
 [![Conventional Commits][conventional-src]][conventional-href]
@@ -23,8 +22,6 @@ Made with 💚
 
 Published under [MIT License](./LICENSE).
 
-[codecov-src]: https://codecov.io/gh/PrivateAim/policy/branch/master/graph/badge.svg?token=4KNSG8L13V
-[codecov-href]: https://codecov.io/gh/PrivateAim/policy
 [workflow-src]: https://github.com/PrivateAim/policy/workflows/CI/badge.svg
 [workflow-href]: https://github.com/PrivateAim/policy
 [snyk-src]: https://snyk.io/test/github/PrivateAim/policy/badge.svg?targetFile=package.json
