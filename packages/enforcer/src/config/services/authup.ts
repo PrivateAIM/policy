@@ -7,6 +7,7 @@
 
 import type { TokenCreatorOptions } from '@authup/core-http-kit';
 import { mountClientResponseErrorTokenHook } from '@authup/core-http-kit';
+import type { ConnectionString } from '@authup/core-kit';
 import { parseConnectionString } from '@authup/core-kit';
 import {
     AuthupClient,
@@ -14,7 +15,7 @@ import {
 } from '@privateaim/server-kit';
 import { useEnv } from '../env';
 
-export function configureAuthup() {
+export function useAuthupConnectionOptions() : ConnectionString {
     const baseURL = useEnv('authupURL');
     const connection = parseConnectionString(baseURL);
     if (!connection) {
@@ -24,6 +25,12 @@ export function configureAuthup() {
     if (connection.type === 'client') {
         throw new Error('Client authentication is disabled.');
     }
+
+    return connection;
+}
+
+export function configureAuthupClient() {
+    const connection = useAuthupConnectionOptions();
 
     setAuthupClientFactory(() => {
         const client = new AuthupClient({

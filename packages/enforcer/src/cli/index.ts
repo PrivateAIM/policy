@@ -6,7 +6,14 @@
  */
 
 import { cac } from 'cac';
+import { config } from 'dotenv';
+import path from 'node:path';
 import { mountCLIStartCommand } from './commands';
+
+config({
+    debug: false,
+    path: path.resolve(process.cwd(), '.env'),
+});
 
 const cli = cac();
 

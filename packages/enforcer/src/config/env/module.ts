@@ -45,7 +45,7 @@ export function useEnv(key?: string) : any {
 
         publicURL: read('PUBLIC_URL', `http://127.0.0.1:${port}/`),
         authupURL: orFail(read('AUTHUP_URL')),
-        coreURL: orFail(read('APP_URL')),
+        coreURL: orFail(read('CORE_URL')),
     };
 
     if (typeof key === 'string') {

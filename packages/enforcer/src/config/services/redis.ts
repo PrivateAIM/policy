@@ -9,7 +9,7 @@ import { isBoolFalse, isBoolTrue } from '@privateaim/kit';
 import { createRedisClient, setRedisFactory } from '@privateaim/server-kit';
 import { ConfigDefaults, useEnv } from '../env';
 
-export function configureRedis() {
+export function configureRedisClient() {
     const connectionString = useEnv('redisConnectionString');
     if (
         typeof connectionString !== 'undefined' &&

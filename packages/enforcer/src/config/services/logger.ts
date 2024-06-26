@@ -8,6 +8,6 @@
 import type { LoggerCreateContext } from '@privateaim/server-kit';
 import { createLogger, setLoggerFactory } from '@privateaim/server-kit';
 
-export function setupLogger(ctx: LoggerCreateContext): void {
+export function configureLoggerClient(ctx: LoggerCreateContext): void {
     setLoggerFactory(() => createLogger(ctx));
 }

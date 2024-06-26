@@ -7,17 +7,20 @@
 
 import { WRITABLE_DIRECTORY } from '../constants';
 import {
-    configureAuthup,
-    configureRedis,
-    setupLogger,
+    configureAuthupClient,
+    configureCoreClient,
+    configureLoggerClient,
+    configureRedisClient,
 } from './services';
 
 export function configure() {
-    setupLogger({
+    configureLoggerClient({
         directory: WRITABLE_DIRECTORY,
     });
 
-    configureAuthup();
+    configureAuthupClient();
 
-    configureRedis();
+    configureCoreClient();
+
+    configureRedisClient();
 }
