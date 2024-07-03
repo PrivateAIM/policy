@@ -1,0 +1,144 @@
+{
+    "definitions": {
+        "EvaluationExecutionResponse": {
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "success"
+            ],
+            "type": "object"
+        },
+        "PolicyEvaluationIdentity": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "type"
+            ],
+            "type": "object"
+        },
+        "PolicyEvaluationContext": {
+            "properties": {
+                "dateTime": {
+                    "type": "object",
+                    "x-nullable": true
+                },
+                "attributes": {
+                    "properties": {},
+                    "additionalProperties": {
+                        "additionalProperties": true
+                    },
+                    "type": "object",
+                    "description": "Attributes"
+                },
+                "identity": {
+                    "$ref": "#/definitions/PolicyEvaluationIdentity",
+                    "description": "Identity of the executing party."
+                }
+            },
+            "additionalProperties": {
+                "additionalProperties": true
+            },
+            "type": "object"
+        },
+        "EvaluationExecutionRequestPayload": {
+            "properties": {
+                "context": {
+                    "$ref": "#/definitions/PolicyEvaluationContext"
+                },
+                "permission": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "context",
+                "permission"
+            ],
+            "type": "object"
+        }
+    },
+    "info": {
+        "title": "API Documentation",
+        "version": "0.0.0",
+        "description": "Explore the REST Endpoints of the API."
+    },
+    "paths": {
+        "/{id}": {
+            "post": {
+                "operationId": "Execute",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/EvaluationExecutionResponse"
+                        }
+                    }
+                },
+                "security": [],
+                "tags": [
+                    "core"
+                ],
+                "parameters": [
+                    {
+                        "description": "",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "",
+                        "in": "body",
+                        "name": "data",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/EvaluationExecutionRequestPayload"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "swagger": "2.0",
+    "securityDefinitions": {
+        "bearer": {
+            "name": "Bearer",
+            "type": "apiKey",
+            "in": "header"
+        },
+        "basicAuth": {
+            "type": "basic"
+        },
+        "oauth2Implicit": {
+            "type": "oauth2",
+            "flow": "password",
+            "tokenUrl": "user://admin:start123@https//privateaim.net/auth/token"
+        }
+    },
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "host": "127.0.0.1:3000",
+    "basePath": "/"
+}

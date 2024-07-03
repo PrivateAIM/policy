@@ -15,6 +15,7 @@ import {
     DBody, DController, DPath, DPost, DTags,
 } from '@routup/decorators';
 import { useCoreClient } from '../../../services';
+import { buildErrorMessageForZodError } from '../../../utils';
 import { EvaluationExecutionRequestPayload, EvaluationExecutionResponse } from './types';
 
 const schema = z.object({
@@ -38,7 +39,7 @@ export class RootController {
     ): Promise<EvaluationExecutionResponse> {
         const parsed = schema.safeParse(data);
         if (!parsed.success) {
-            throw new BadRequestError(parsed.error.message);
+            throw new BadRequestError(buildErrorMessageForZodError(parsed.error));
         }
 
         const authupClient = useAuthupClient();
@@ -50,7 +51,7 @@ export class RootController {
             permissionId = permission.id;
         } catch (e) {
             if (isClientErrorWithStatusCode(e, 404)) {
-                throw new BadRequestError('The permission property is invalid.');
+                throw new BadRequestError('The permission was not found.');
             }
 
             throw e;
@@ -70,7 +71,7 @@ export class RootController {
         if (typeof analysisPermission === 'undefined') {
             return {
                 success: false,
-                message: 'No permission is assigned to the given analysis.',
+                message: 'The permission is not assigned to the provided analysis.',
             };
         }
 
