@@ -9,18 +9,19 @@ import { isClientErrorWithStatusCode } from 'hapic';
 import { PolicyEngine } from '@authup/kit';
 import { BadRequestError } from '@ebec/http';
 import { useAuthupClient } from '@privateaim/server-kit';
+import { Response, sendAccepted } from 'routup';
 import { z } from 'zod';
 import { ForceLoggedInMiddleware } from '@privateaim/server-http-kit';
 import {
-    DBody, DController, DPath, DPost, DTags,
+    DBody, DController, DPath, DPost, DResponse, DTags,
 } from '@routup/decorators';
 import { useCoreClient } from '../../../services';
 import { buildErrorMessageForZodError } from '../../../utils';
-import { EvaluationExecutionRequestPayload, EvaluationExecutionResponse } from './types';
+import { EvaluationExecutionRequestPayload } from './types';
 
 const schema = z.object({
     permission: z.string(),
-    context: z.object({}),
+    data: z.object({}),
 });
 
 @DTags('core')
@@ -34,10 +35,11 @@ export class RootController {
 
     @DPost('/:id', [ForceLoggedInMiddleware])
     async execute(
-        @DBody() data: EvaluationExecutionRequestPayload,
+        @DResponse() response: Response,
+            @DBody() payload: EvaluationExecutionRequestPayload,
             @DPath('id') id: string,
-    ): Promise<EvaluationExecutionResponse> {
-        const parsed = schema.safeParse(data);
+    ): Promise<void> {
+        const parsed = schema.safeParse(payload);
         if (!parsed.success) {
             throw new BadRequestError(buildErrorMessageForZodError(parsed.error));
         }
@@ -47,7 +49,7 @@ export class RootController {
 
         let permissionId: string | undefined;
         try {
-            const permission = await authupClient.permission.getOne(data.permission);
+            const permission = await authupClient.permission.getOne(payload.permission);
             permissionId = permission.id;
         } catch (e) {
             if (isClientErrorWithStatusCode(e, 404)) {
@@ -69,32 +71,18 @@ export class RootController {
 
         const [analysisPermission] = analysisPermissions;
         if (typeof analysisPermission === 'undefined') {
-            return {
-                success: false,
-                message: 'The permission is not assigned to the provided analysis.',
-            };
+            throw new BadRequestError('The permission is not assigned to the provided analysis.');
         }
 
         if (analysisPermission.policy_id) {
             const policy = await authupClient.policy.getOne(analysisPermission.policy_id);
 
-            try {
-                const output = this.policyEngine.evaluate(policy, data.context);
-                return {
-                    success: output,
-                };
-            } catch (e) {
-                return {
-                    success: false,
-                    message: e instanceof Error ?
-                        e.message :
-                        undefined,
-                };
+            const output = this.policyEngine.evaluate(policy, payload.data);
+            if (!output) {
+                throw new BadRequestError('The permission cannot be used by the analysis.');
             }
         }
 
-        return {
-            success: true,
-        };
+        return sendAccepted(response);
     }
 }

@@ -1,19 +1,5 @@
 {
     "definitions": {
-        "EvaluationExecutionResponse": {
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            },
-            "required": [
-                "success"
-            ],
-            "type": "object"
-        },
         "PolicyEvaluationIdentity": {
             "properties": {
                 "id": {
@@ -55,7 +41,7 @@
         },
         "EvaluationExecutionRequestPayload": {
             "properties": {
-                "context": {
+                "data": {
                     "$ref": "#/definitions/PolicyEvaluationContext"
                 },
                 "permission": {
@@ -63,7 +49,7 @@
                 }
             },
             "required": [
-                "context",
+                "data",
                 "permission"
             ],
             "type": "object"
@@ -85,11 +71,8 @@
                     "application/json"
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Ok",
-                        "schema": {
-                            "$ref": "#/definitions/EvaluationExecutionResponse"
-                        }
+                    "204": {
+                        "description": "No content"
                     }
                 },
                 "security": [],
@@ -107,7 +90,7 @@
                     {
                         "description": "",
                         "in": "body",
-                        "name": "data",
+                        "name": "payload",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/EvaluationExecutionRequestPayload"

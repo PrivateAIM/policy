@@ -10,10 +10,5 @@ import type { PolicyEvaluationContext } from '@authup/kit';
 export type EvaluationExecutionRequestPayload = {
     permission: string,
 
-    context: PolicyEvaluationContext
-};
-
-export type EvaluationExecutionResponse = {
-    success: boolean,
-    message?: string
+    data: PolicyEvaluationContext
 };

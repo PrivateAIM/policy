@@ -8,7 +8,7 @@
 import { cac } from 'cac';
 import { config } from 'dotenv';
 import path from 'node:path';
-import { mountCLIStartCommand } from './commands';
+import { mountCLISeedCommand, mountCLIStartCommand } from './commands';
 
 config({
     debug: false,
@@ -17,6 +17,7 @@ config({
 
 const cli = cac();
 
+mountCLISeedCommand(cli);
 mountCLIStartCommand(cli);
 
 cli.help();
