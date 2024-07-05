@@ -6,7 +6,7 @@
  */
 
 import { isClientErrorWithStatusCode } from 'hapic';
-import { PolicyEngine } from '@authup/kit';
+import { PolicyEngine } from '@privateaim/policy-kit';
 import { BadRequestError } from '@ebec/http';
 import { useAuthupClient } from '@privateaim/server-kit';
 import { Response, sendAccepted } from 'routup';

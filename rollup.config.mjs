@@ -19,8 +19,7 @@ export function createConfig(
         pluginsPre = [],
         pluginsPost = [],
         external = [],
-        defaultExport = false,
-        swc = {}
+        defaultExport = false
     }
 ) {
     external = Object.keys(pkg.dependencies || {})
