@@ -10,19 +10,13 @@ import { PolicyEngine } from '@privateaim/policy-kit';
 import { BadRequestError } from '@ebec/http';
 import { useAuthupClient } from '@privateaim/server-kit';
 import { Response, sendAccepted } from 'routup';
-import { z } from 'zod';
 import { ForceLoggedInMiddleware } from '@privateaim/server-http-kit';
 import {
-    DBody, DController, DPath, DPost, DResponse, DTags,
+    DBody, DController, DPost, DResponse, DTags,
 } from '@routup/decorators';
 import { useCoreClient } from '../../../services';
-import { buildErrorMessageForZodError } from '../../../utils';
 import { EvaluationExecutionRequestPayload } from './types';
-
-const schema = z.object({
-    permission: z.string(),
-    data: z.object({}),
-});
+import { EvaluationValidator } from './validator';
 
 @DTags('core')
 @DController('')
@@ -33,24 +27,22 @@ export class RootController {
         this.policyEngine = new PolicyEngine();
     }
 
-    @DPost('/:id', [ForceLoggedInMiddleware])
+    @DPost('/', [ForceLoggedInMiddleware])
     async execute(
         @DResponse() response: Response,
-            @DBody() payload: EvaluationExecutionRequestPayload,
-            @DPath('id') id: string,
+            @DBody() input: EvaluationExecutionRequestPayload,
     ): Promise<void> {
-        const parsed = schema.safeParse(payload);
-        if (!parsed.success) {
-            throw new BadRequestError(buildErrorMessageForZodError(parsed.error));
-        }
+        const evaluationValidator = new EvaluationValidator();
+        const data = await evaluationValidator.run(input);
 
         const authupClient = useAuthupClient();
         const coreClient = useCoreClient();
 
-        let permissionId: string | undefined;
         try {
-            const permission = await authupClient.permission.getOne(payload.permission);
-            permissionId = permission.id;
+            if (data.permission_name) {
+                const permission = await authupClient.permission.getOne(data.permission_name);
+                data.permission_id = permission.id;
+            }
         } catch (e) {
             if (isClientErrorWithStatusCode(e, 404)) {
                 throw new BadRequestError('The permission was not found.');
@@ -61,8 +53,8 @@ export class RootController {
 
         const { data: analysisPermissions } = await coreClient.analysisPermission.getMany({
             filter: {
-                permission_id: permissionId,
-                analysis_id: id,
+                permission_id: data.permission_id,
+                analysis_id: data.analysis_id,
             },
             page: {
                 limit: 1,
@@ -77,7 +69,7 @@ export class RootController {
         if (analysisPermission.policy_id) {
             const policy = await authupClient.policy.getOne(analysisPermission.policy_id);
 
-            const output = this.policyEngine.evaluate(policy, payload.data);
+            const output = this.policyEngine.evaluate(policy, input.data);
             if (!output) {
                 throw new BadRequestError('The permission cannot be used by the analysis.');
             }

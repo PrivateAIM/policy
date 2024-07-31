@@ -44,13 +44,19 @@
                 "data": {
                     "$ref": "#/definitions/PolicyEvaluationContext"
                 },
-                "permission": {
+                "analysis_id": {
+                    "type": "string"
+                },
+                "permission_id": {
+                    "type": "string"
+                },
+                "permission_name": {
                     "type": "string"
                 }
             },
             "required": [
                 "data",
-                "permission"
+                "analysis_id"
             ],
             "type": "object"
         }
@@ -61,7 +67,7 @@
         "description": "Explore the REST Endpoints of the API."
     },
     "paths": {
-        "/{id}": {
+        "/": {
             "post": {
                 "operationId": "Execute",
                 "consumes": [
@@ -82,15 +88,8 @@
                 "parameters": [
                     {
                         "description": "",
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "description": "",
                         "in": "body",
-                        "name": "payload",
+                        "name": "input",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/EvaluationExecutionRequestPayload"
@@ -113,7 +112,7 @@
         "oauth2Implicit": {
             "type": "oauth2",
             "flow": "password",
-            "tokenUrl": "user://admin:start123@https//privateaim.net/auth/token"
+            "tokenUrl": "user://admin:start123@https//auth.privateaim.dev/token"
         }
     },
     "consumes": [

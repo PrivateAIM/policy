@@ -8,7 +8,10 @@
 import type { PolicyEvaluationContext } from '@authup/kit';
 
 export type EvaluationExecutionRequestPayload = {
-    permission: string,
+    permission_name?: string,
+    permission_id?: string,
+
+    analysis_id: string,
 
     data: PolicyEvaluationContext
 };
